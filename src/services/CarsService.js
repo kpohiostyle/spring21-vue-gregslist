@@ -16,9 +16,7 @@ class CarsService {
 
   async createCar(newCar) {
     const res = await api.post('cars', newCar)
-    debugger
     AppState.cars.push(res.data)
-    // everytime a car is created, we will change pages
     router.push({ name: 'CarDetails', params: { id: res.data.id } })
   }
 

@@ -1,21 +1,21 @@
 <template>
-  <div class="car-details" v-if="state.car">
+  <div class="house-details" v-if="state.house">
     <div class="row">
       <div class="col-md-12">
         <div class="card shadow">
-          <img class="card-img-top" :src="state.car.imgUrl" alt="">
+          <img class="card-img-top" :src="state.house.imgUrl" alt="">
           <div class="card-body">
             <h4 class="card-title">
               something else
             </h4>
             <p class="card-text">
-              Make: {{ state.car.make }} | Model: {{ state.car.model }}
+              Bathrooms: {{ state.house.bathrooms }} | Bedrooms: {{ state.house.bedrooms }}
             </p>
           </div>
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-danger" @click="deleteCar">
+    <button type="button" class="btn btn-danger" @click="deleteHouse">
       Delete
     </button>
   </div>
@@ -25,47 +25,42 @@
 import { useRoute, useRouter } from 'vue-router'
 import { AppState } from '../AppState'
 import { reactive, computed, onMounted } from 'vue'
-import { carsService } from '../services/CarsService'
+import { housesService } from '../services/HousesService'
 
 export default {
-  name: 'CarDetails',
+  name: 'HouseDetails',
   setup() {
-    // ROUTE is the current page info
     const route = useRoute()
-    // ROUTER is the toolset of changing routes automatically
     const router = useRouter()
     const state = reactive({
-      car: computed(() => AppState.activeCar)
+      house: computed(() => AppState.activeHouse)
     })
-
     onMounted(async() => {
       try {
-        await carsService.getCarById(route.params.id)
+        await housesService.getHouseById(route.params.id)
       } catch (error) {
         console.error(error)
       }
     })
-
     return {
       route,
       state,
-      async deleteCar() {
+      async deleteHouse() {
         try {
-          await carsService.deleteCar(state.car.id)
-          // Router is a toolset, here used to change the page after the delete is completed
-          // returning the user to the cars page
-          AppState.activeCar = null
-          router.push({ name: 'Cars' })
+          await housesService.deleteHouse(state.house.id)
+          AppState.activeHouse = null
+          router.push({ name: 'Houses' })
         } catch (error) {
           console.error(error)
         }
       }
     }
   },
-  components: {}
+  components: {
+  }
+
 }
 </script>
-
-<style lang="scss" scoped>
+<style lang="">
 
 </style>
